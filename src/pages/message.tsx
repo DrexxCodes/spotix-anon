@@ -14,7 +14,7 @@ import html2canvas from "html2canvas"
 import "./message.css"
 
 export default function Message() {
-  const [user, setUser] = useState<any>(null)
+  const [setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState<any>(null)
   const [link, setLink] = useState<any>(null)
