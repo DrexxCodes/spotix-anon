@@ -17,6 +17,9 @@
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--primary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .response-content {
@@ -197,5 +200,16 @@
 
   .cta-block {
     padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .response-title {
+    font-size: 1.5rem;
+  }
+
+  .decrypt-text {
+    display: inline-block;
+    width: 100%;
   }
 }

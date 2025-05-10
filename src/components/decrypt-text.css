@@ -1,0 +1,19 @@
+.decrypt-text {
+  font-family: monospace;
+  letter-spacing: 0.05em;
+  word-spacing: 0.2em;
+}
+
+.decrypt-char {
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+.decrypt-space {
+  opacity: 0;
+}
+
+.decrypting .decrypt-char {
+  color: #00ff00;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+}

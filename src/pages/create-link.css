@@ -226,3 +226,126 @@
     padding: 1.5rem;
   }
 }
+
+/* Copy URL Box */
+.copy-url-box {
+  background-color: var(--background);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-url-box:hover {
+  background-color: rgba(107, 47, 165, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(107, 47, 165, 0.1);
+}
+
+.copy-url-text {
+  font-family: monospace;
+  word-break: break-all;
+  margin-bottom: 0.5rem;
+}
+
+.copy-url-hint {
+  font-size: 0.75rem;
+  color: var(--primary);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Add these styles to the existing create-link.css file */
+
+.link-limit-info {
+  background-color: var(--color-background-secondary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.link-count {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.link-limit-progress {
+  height: 6px;
+  background-color: var(--color-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.link-limit-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.limit-reached-box {
+  background-color: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.limit-reached-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.limit-reached-icon svg {
+  color: var(--color-primary);
+}
+
+.limit-reached-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.limit-reached-message {
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.upgrade-button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.upgrade-button:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+.upgrade-button:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

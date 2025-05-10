@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { doc, getDoc, updateDoc } from "firebase/firestore"
-import { auth, db } from "../lib/firebase"
+import { auth, db, getLinkDocRef, getMessageDocRef } from "../lib/firebase"
 import { onAuthStateChanged } from "firebase/auth"
 import Preloader from "../components/preloader"
 import Header from "../components/header"
@@ -14,7 +14,7 @@ import html2canvas from "html2canvas"
 import "./message.css"
 
 export default function Message() {
-  const [setUser] = useState<any>(null)
+  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState<any>(null)
   const [link, setLink] = useState<any>(null)
@@ -55,14 +55,15 @@ export default function Message() {
   // Fetch message and link data
   useEffect(() => {
     const fetchData = async () => {
-      if (!linkId || !messageId) {
+      if (!linkId || !messageId || !user) {
         navigate("/inbox")
         return
       }
 
       try {
-        // Fetch link data
-        const linkDoc = await getDoc(doc(db, "anonymousLinks", linkId))
+        // Fetch link data from user's collection
+        const linkDocRef = getLinkDocRef(user.uid, linkId)
+        const linkDoc = await getDoc(linkDocRef)
 
         if (!linkDoc.exists()) {
           navigate("/inbox")
@@ -73,7 +74,8 @@ export default function Message() {
         setLink(linkData)
 
         // Fetch message data
-        const messageDoc = await getDoc(doc(db, "anonymousLinks", linkId, "messages", messageId))
+        const messageDocRef = getMessageDocRef(user.uid, linkId, messageId)
+        const messageDoc = await getDoc(messageDocRef)
 
         if (!messageDoc.exists()) {
           navigate(`/inbox/${linkId}`)
@@ -94,18 +96,20 @@ export default function Message() {
       }
     }
 
-    fetchData()
-  }, [linkId, messageId, navigate])
+    if (user) {
+      fetchData()
+    }
+  }, [linkId, messageId, navigate, user])
 
   const handleBackClick = () => {
     navigate(`/inbox/${linkId}`)
   }
 
   const toggleReadStatus = async () => {
-    if (!message || !linkId || !messageId) return
+    if (!message || !linkId || !messageId || !user) return
 
     try {
-      const messageRef = doc(db, "anonymousLinks", linkId, "messages", messageId)
+      const messageRef = getMessageDocRef(user.uid, linkId, messageId)
       await updateDoc(messageRef, {
         isRead: !message.isRead,
       })
@@ -316,30 +320,34 @@ export default function Message() {
                     <span className="metadata-label">Anonymous Link:</span>
                     <div className="share-link-container">
                       <span className="metadata-value share-link-text">{`${window.location.origin}/response/${linkId}`}</span>
-                      <button
-                        className="copy-link-button"
-                        onClick={() => {
-                          navigator.clipboard.writeText(`${window.location.origin}/response/${linkId}`)
-                          alert("Link copied to clipboard!")
-                        }}
-                        title="Copy link"
-                      >
-                        <Copy size={14} />
-                      </button>
-                      <button
-                        className="whatsapp-share-button"
-                        onClick={() => {
-                          const linkUrl = `${window.location.origin}/response/${linkId}`
-                          const text = encodeURIComponent(
-                            `Hey guys, I just made anonymous link. Oya make we start ${linkUrl}`,
-                          )
-                          window.open(`https://wa.me/?text=${text}`, "_blank")
-                        }}
-                        title="Share on WhatsApp"
-                      >
-                        <Share2 size={14} />
-                      </button>
                     </div>
+                  </div>
+                  <div className="share-link-actions">
+                    <button
+                      className="copy-link-button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${window.location.origin}/response/${linkId}`)
+                        alert("Link copied to clipboard!")
+                      }}
+                      title="Copy link"
+                    >
+                      <Copy size={14} className="button-icon" />
+                      <span>Copy Link</span>
+                    </button>
+                    <button
+                      className="whatsapp-share-button"
+                      onClick={() => {
+                        const linkUrl = `${window.location.origin}/response/${linkId}`
+                        const text = encodeURIComponent(
+                          `Hey guys, I just made anonymous link. Oya make we start ${linkUrl}`,
+                        )
+                        window.open(`https://wa.me/?text=${text}`, "_blank")
+                      }}
+                      title="Share on WhatsApp"
+                    >
+                      <Share2 size={14} className="button-icon" />
+                      <span>Share on WhatsApp</span>
+                    </button>
                   </div>
                 </div>
 

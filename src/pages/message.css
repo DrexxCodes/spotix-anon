@@ -341,10 +341,8 @@
 
 /* Share Link */
 .share-link-container {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   width: 100%;
+  margin-bottom: 0.5rem;
 }
 
 .share-link-text {
@@ -352,8 +350,14 @@
   font-size: 0.8rem;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
+  word-break: break-all;
+}
+
+.share-link-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .copy-link-button,
@@ -361,14 +365,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
   cursor: pointer;
   transition: background-color 0.2s ease;
-  flex-shrink: 0;
+  font-size: 0.8rem;
+  border: none;
 }
 
 .copy-link-button {
@@ -387,6 +390,10 @@
 
 .whatsapp-share-button:hover {
   background-color: #128c7e;
+}
+
+.button-icon {
+  flex-shrink: 0;
 }
 
 /* Responsive */

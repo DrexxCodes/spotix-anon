@@ -4,8 +4,8 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { doc, getDoc, updateDoc, deleteDoc, collection, getDocs, setDoc } from "firebase/firestore"
-import { auth, db } from "../lib/firebase"
+import { doc, getDoc, updateDoc, deleteDoc, getDocs, setDoc } from "firebase/firestore"
+import { auth, db, getLinkDocRef, getLinkMessagesCollection } from "../lib/firebase"
 import { onAuthStateChanged } from "firebase/auth"
 import { uploadToCloudinary } from "../lib/cloudinary"
 import { AnimatedButton } from "../components/animated-button"
@@ -52,7 +52,8 @@ export default function Settings() {
       if (!linkId || !user) return
 
       try {
-        const linkDoc = await getDoc(doc(db, "anonymousLinks", linkId))
+        const linkDocRef = getLinkDocRef(user.uid, linkId)
+        const linkDoc = await getDoc(linkDocRef)
 
         if (!linkDoc.exists()) {
           navigate("/inbox")
@@ -165,14 +166,15 @@ export default function Settings() {
 
       // Check if link name has changed and needs to be updated
       if (formattedLinkName !== linkId) {
-        // Create new document with new ID
-        const newLinkRef = doc(db, "anonymousLinks", formattedLinkName)
+        // Create new document with new ID in user's collection
+        const newLinkRef = getLinkDocRef(user.uid, formattedLinkName)
 
         // Copy all messages from old link to new link
-        const messagesSnapshot = await getDocs(collection(db, "anonymousLinks", linkId, "messages"))
+        const messagesCollection = getLinkMessagesCollection(user.uid, linkId)
+        const messagesSnapshot = await getDocs(messagesCollection)
 
         // Create new document with updated data
-        await updateDoc(newLinkRef, {
+        await setDoc(newLinkRef, {
           name: linkName,
           formattedName: formattedLinkName,
           imageUrl,
@@ -185,13 +187,26 @@ export default function Settings() {
         // Copy messages to new document
         const copyPromises = messagesSnapshot.docs.map(async (messageDoc) => {
           const messageData = messageDoc.data()
-          await setDoc(doc(db, "anonymousLinks", formattedLinkName, "messages", messageDoc.id), messageData)
+          const newMessageCollection = getLinkMessagesCollection(user.uid, formattedLinkName)
+          await setDoc(doc(newMessageCollection, messageDoc.id), messageData)
         })
 
         await Promise.all(copyPromises)
 
+        // Update the public reference
+        await updateDoc(doc(db, "publicLinks", linkId), {
+          linkId: formattedLinkName,
+        })
+
+        // Also create a new public reference if the ID changed
+        await setDoc(doc(db, "publicLinks", formattedLinkName), {
+          userId: user.uid,
+          linkId: formattedLinkName,
+          createdAt: new Date(),
+        })
+
         // Delete old document
-        await deleteDoc(doc(db, "anonymousLinks", linkId))
+        await deleteDoc(getLinkDocRef(user.uid, linkId))
 
         // Redirect to new link
         navigate(`/settings/${formattedLinkName}`)
@@ -199,7 +214,7 @@ export default function Settings() {
         setSuccess("Link updated successfully!")
       } else {
         // Update existing document
-        await updateDoc(doc(db, "anonymousLinks", linkId), {
+        await updateDoc(getLinkDocRef(user.uid, linkId), {
           name: linkName,
           imageUrl,
           isPaused,
@@ -223,16 +238,20 @@ export default function Settings() {
 
     try {
       // Delete all messages
-      const messagesSnapshot = await getDocs(collection(db, "anonymousLinks", linkId, "messages"))
+      const messagesCollection = getLinkMessagesCollection(user.uid, linkId)
+      const messagesSnapshot = await getDocs(messagesCollection)
 
       const deletePromises = messagesSnapshot.docs.map(async (messageDoc) => {
-        await deleteDoc(doc(db, "anonymousLinks", linkId, "messages", messageDoc.id))
+        await deleteDoc(doc(messagesCollection, messageDoc.id))
       })
 
       await Promise.all(deletePromises)
 
-      // Delete link document
-      await deleteDoc(doc(db, "anonymousLinks", linkId))
+      // Delete link document from user's collection
+      await deleteDoc(getLinkDocRef(user.uid, linkId))
+
+      // Delete public reference
+      await deleteDoc(doc(db, "publicLinks", linkId))
 
       navigate("/inbox")
     } catch (error) {
@@ -311,6 +330,9 @@ export default function Settings() {
               </div>
 
               <div className="form-group">
+                <label htmlFor="linkName" className="form-label">
+                  Link Name
+                </label>
                 <input
                   type="text"
                   id="linkName"

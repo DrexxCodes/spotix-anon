@@ -4,8 +4,8 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { doc, getDoc, collection, addDoc, serverTimestamp } from "firebase/firestore"
-import { db } from "../lib/firebase"
+import { doc, getDoc, addDoc, serverTimestamp } from "firebase/firestore"
+import { db, getLinkDocRef, getLinkMessagesCollection } from "../lib/firebase"
 import { AnimatedButton } from "../components/animated-button"
 import DecryptText from "../components/decrypt-text"
 import Preloader from "../components/preloader"
@@ -57,6 +57,7 @@ export default function Response() {
   const { linkId } = useParams<{ linkId: string }>()
   const [loading, setLoading] = useState(true)
   const [linkData, setLinkData] = useState<any>(null)
+  const [userId, setUserId] = useState<string | null>(null)
   const [message, setMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -88,7 +89,23 @@ export default function Response() {
       }
 
       try {
-        const linkDoc = await getDoc(doc(db, "anonymousLinks", linkId))
+        // First, get the user ID from the public links collection
+        const publicLinkRef = doc(db, "publicLinks", linkId)
+        const publicLinkDoc = await getDoc(publicLinkRef)
+
+        if (!publicLinkDoc.exists()) {
+          setError("This anonymous message link is either deleted or is incorrect.")
+          setLoading(false)
+          return
+        }
+
+        const publicLinkData = publicLinkDoc.data()
+        const ownerId = publicLinkData.userId
+        setUserId(ownerId)
+
+        // Now get the actual link data from the user's collection
+        const linkDocRef = getLinkDocRef(ownerId, linkId)
+        const linkDoc = await getDoc(linkDocRef)
 
         if (linkDoc.exists()) {
           const data = linkDoc.data()
@@ -122,7 +139,7 @@ export default function Response() {
       return
     }
 
-    if (!linkId || !linkData) {
+    if (!linkId || !linkData || !userId) {
       setError("Invalid link")
       return
     }
@@ -139,8 +156,9 @@ export default function Response() {
       // Get device information
       const deviceInfo = getDeviceInfo()
 
-      // Add message to Firestore
-      await addDoc(collection(db, "anonymousLinks", linkId, "messages"), {
+      // Add message to Firestore in the user's collection
+      const messagesCollection = getLinkMessagesCollection(userId, linkId)
+      await addDoc(messagesCollection, {
         message,
         createdAt: serverTimestamp(),
         isRead: false,
@@ -196,13 +214,13 @@ export default function Response() {
         <main className="container p-8 flex-1">
           <div className="response-container">
             <div className="response-header">
-              <h3 className="response-title">
+              <h1 className="response-title">
                 <DecryptText
-                  originalText={`Send ${linkData?.creatorUsername} an anonymous message`}
-                  finalText={`Welcome to ${linkData?.creatorUsername}'s anonymous space`}
+                  originalText={`Send ${linkData?.creatorUsername} a message`}
+                  finalText={`Welcome to ${linkData?.creatorUsername}'s space`}
                   interval={4000}
                 />
-              </h3>
+              </h1>
             </div>
 
             <div className="response-content">

@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { collection, query, where, getDocs, doc, updateDoc, orderBy } from "firebase/firestore"
-import { auth, db } from "../lib/firebase"
+import { query, getDocs, updateDoc, orderBy } from "firebase/firestore"
+import { auth, getUserLinksCollection, getLinkMessagesCollection, getMessageDocRef } from "../lib/firebase"
 import { onAuthStateChanged } from "firebase/auth"
 import { AnimatedButton } from "../components/animated-button"
 import Preloader from "../components/preloader"
 import Header from "../components/header"
 import Footer from "../components/footer"
-import { MoreVertical, ArrowLeft, CheckCircle, XCircle, Settings, Copy, Share2 } from "lucide-react"
+import { MoreVertical, ArrowLeft, CheckCircle, XCircle, Settings } from "lucide-react"
 import "./inbox.css"
 
 export default function Inbox() {
@@ -19,8 +19,6 @@ export default function Inbox() {
   const [selectedLink, setSelectedLink] = useState<any>(null)
   const [messages, setMessages] = useState<any[]>([])
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
-  const [showShareDialog, setShowShareDialog] = useState(false)
-  const [currentLinkId, setCurrentLinkId] = useState<string | null>(null)
   const navigate = useNavigate()
   const { linkId } = useParams<{ linkId: string }>()
 
@@ -43,16 +41,17 @@ export default function Inbox() {
       if (!user) return
 
       try {
-        const q = query(collection(db, "anonymousLinks"), where("creatorId", "==", user.uid))
-        const querySnapshot = await getDocs(q)
+        // Get links from the user's collection
+        const userLinksCollection = getUserLinksCollection(user.uid)
+        const querySnapshot = await getDocs(userLinksCollection)
 
         const linksData = await Promise.all(
           querySnapshot.docs.map(async (docSnapshot) => {
             const linkData = docSnapshot.data()
 
             // Get message count for each link
-            const messagesQuery = collection(db, "anonymousLinks", docSnapshot.id, "messages")
-            const messagesSnapshot = await getDocs(messagesQuery)
+            const messagesCollection = getLinkMessagesCollection(user.uid, docSnapshot.id)
+            const messagesSnapshot = await getDocs(messagesCollection)
 
             return {
               id: docSnapshot.id,
@@ -88,8 +87,11 @@ export default function Inbox() {
 
   // Fetch messages for a selected link
   const fetchMessages = async (linkId: string) => {
+    if (!user) return
+
     try {
-      const q = query(collection(db, "anonymousLinks", linkId, "messages"), orderBy("createdAt", "desc"))
+      const messagesCollection = getLinkMessagesCollection(user.uid, linkId)
+      const q = query(messagesCollection, orderBy("createdAt", "desc"))
       const querySnapshot = await getDocs(q)
 
       const messagesData = querySnapshot.docs.map((doc) => ({
@@ -129,15 +131,15 @@ export default function Inbox() {
   }
 
   const handleMessageClick = (messageId: string) => {
-    if (!selectedLink) return
+    if (!selectedLink || !user) return
     navigate(`/message/${selectedLink.id}/${messageId}`)
   }
 
   const markMessageAsRead = async (messageId: string, isRead: boolean) => {
-    if (!selectedLink) return
+    if (!selectedLink || !user) return
 
     try {
-      const messageRef = doc(db, "anonymousLinks", selectedLink.id, "messages", messageId)
+      const messageRef = getMessageDocRef(user.uid, selectedLink.id, messageId)
       await updateDoc(messageRef, {
         isRead: !isRead,
       })
@@ -186,23 +188,6 @@ export default function Inbox() {
 
     // Otherwise show date
     return date.toLocaleDateString()
-  }
-
-  const handleCopyLink = (linkId: string) => {
-    const linkUrl = `${window.location.origin}/response/${linkId}`
-    navigator.clipboard.writeText(linkUrl)
-    setCurrentLinkId(linkId)
-    setShowShareDialog(true)
-    setMenuOpen(null)
-  }
-
-  const handleWhatsAppShare = () => {
-    if (!currentLinkId) return
-
-    const linkUrl = `${window.location.origin}/response/${currentLinkId}`
-    const text = encodeURIComponent(`Hey guys, I just made anonymous link. Oya make we start ${linkUrl}`)
-    window.open(`https://wa.me/?text=${text}`, "_blank")
-    setShowShareDialog(false)
   }
 
   if (loading) {
@@ -286,16 +271,6 @@ export default function Inbox() {
                                 <Settings size={16} />
                                 Settings
                               </button>
-                              <button
-                                className="menu-item"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleCopyLink(link.id)
-                                }}
-                              >
-                                <Copy size={16} />
-                                Copy Link
-                              </button>
                             </div>
                           )}
                         </div>
@@ -371,26 +346,6 @@ export default function Inbox() {
 
         <Footer />
       </div>
-      {showShareDialog && (
-        <div className="share-dialog-overlay" onClick={() => setShowShareDialog(false)}>
-          <div className="share-dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="share-dialog-content">
-              <CheckCircle size={40} className="success-icon" />
-              <h3 className="share-dialog-title">Link copied successfully!</h3>
-              <p className="share-dialog-message">Want to share it on WhatsApp?</p>
-            </div>
-            <div className="share-dialog-actions">
-              <button className="cancel-button" onClick={() => setShowShareDialog(false)}>
-                Close
-              </button>
-              <button className="whatsapp-button" onClick={handleWhatsAppShare}>
-                <Share2 size={16} className="mr-2" />
-                Share on WhatsApp
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   )
 }

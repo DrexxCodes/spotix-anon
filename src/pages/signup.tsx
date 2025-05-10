@@ -76,6 +76,8 @@ export default function Signup() {
         username,
         email,
         plan: "free", // Set default plan to free
+        linkCount: 0, // Initialize link count to 0
+        maxLinks: 5, // Set maximum links for free plan
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       })
