@@ -1,0 +1,228 @@
+.create-link-container {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.create-link-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.create-link-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.create-link-subtitle {
+  color: var(--anonymous-muted);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.create-link-form {
+  background-color: var(--background-secondary);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--background);
+  color: var(--foreground);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(107, 47, 165, 0.2);
+}
+
+.formatted-link-preview {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--anonymous-muted);
+}
+
+.formatted-link {
+  font-family: monospace;
+  color: var(--primary);
+}
+
+/* File upload styles */
+.file-upload-container {
+  width: 100%;
+}
+
+.file-upload-area {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.file-upload-area:hover {
+  border-color: var(--primary);
+  background-color: rgba(107, 47, 165, 0.05);
+}
+
+.file-input {
+  display: none;
+}
+
+.file-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.upload-icon {
+  color: var(--primary);
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.file-upload-hint {
+  font-size: 0.75rem;
+  color: var(--anonymous-muted);
+  margin-top: 0.5rem;
+}
+
+/* File preview styles */
+.file-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.file-preview-image-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.file-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-file-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.remove-file-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.file-name {
+  font-size: 0.875rem;
+  color: var(--anonymous-muted);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 0.5rem;
+}
+
+/* Upload progress styles */
+.upload-progress-container {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(107, 47, 165, 0.2);
+  border-radius: 4px;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.upload-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Error and success messages */
+.error-message,
+.success-message {
+  padding: 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+}
+
+.error-message {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.success-message {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Form actions */
+.form-actions {
+  margin-top: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .create-link-title {
+    font-size: 1.5rem;
+  }
+
+  .create-link-form {
+    padding: 1rem;
+  }
+
+  .file-upload-area {
+    padding: 1.5rem;
+  }
+}

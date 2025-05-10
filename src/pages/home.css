@@ -1,0 +1,243 @@
+.home-container {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.greeting-section {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.greeting-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.welcome-translations {
+  position: relative;
+  height: 2.5rem;
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.welcome-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  text-align: center;
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+.welcome-item.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.welcome-text {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.welcome-language {
+  font-size: 0.875rem;
+  color: var(--anonymous-muted);
+}
+
+/* Premium Promo */
+.premium-promo {
+  background: linear-gradient(135deg, #2d1144 0%, #6b2fa5 100%);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  color: white;
+  box-shadow: 0 4px 12px rgba(107, 47, 165, 0.3);
+}
+
+.premium-promo-content {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.premium-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 215, 0, 0.2);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.premium-icon {
+  color: gold;
+}
+
+.premium-text-content {
+  flex: 1;
+}
+
+.premium-promo-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.premium-promo-description {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Action Cards */
+.action-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.action-card {
+  background-color: var(--background-secondary);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.action-card-content {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.action-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(107, 47, 165, 0.1);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.action-icon {
+  color: var(--primary);
+}
+
+.action-text {
+  flex: 1;
+}
+
+.action-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.action-description {
+  font-size: 0.875rem;
+  color: var(--anonymous-muted);
+}
+
+/* Create Anonymous Card */
+.create-anonymous .action-icon-wrapper {
+  background-color: rgba(107, 47, 165, 0.1);
+}
+
+.create-anonymous .action-icon {
+  color: var(--primary);
+}
+
+/* Spotix Advert Card */
+.spotix-advert .action-icon-wrapper {
+  background-color: rgba(255, 61, 113, 0.1);
+}
+
+.spotix-advert .action-icon {
+  color: var(--anonymous-accent);
+}
+
+/* Home Footer */
+.home-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+/* Animation for welcome translations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .premium-promo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .premium-promo-content {
+    margin-bottom: 0;
+    margin-right: 1.5rem;
+  }
+
+  .action-cards {
+    flex-direction: row;
+  }
+
+  .action-card {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .greeting-title {
+    font-size: 1.5rem;
+  }
+
+  .welcome-translations {
+    height: 3.5rem;
+  }
+
+  .premium-promo {
+    padding: 1.25rem;
+  }
+
+  .action-card {
+    padding: 1.25rem;
+  }
+}

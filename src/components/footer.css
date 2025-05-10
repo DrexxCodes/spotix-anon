@@ -1,0 +1,83 @@
+.footer {
+  background-color: var(--background-secondary);
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.device-info,
+.os-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--anonymous-muted);
+  font-size: 0.875rem;
+}
+
+.battery-status,
+.os-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.battery-icon,
+.os-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.battery-icon.charging {
+  color: #48bb78;
+}
+
+.charging-indicator {
+  color: #48bb78;
+}
+
+.battery-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.copyright {
+  text-align: center;
+  color: var(--anonymous-muted);
+  font-size: 0.875rem;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-section {
+    justify-content: flex-start;
+  }
+
+  .copyright {
+    text-align: center;
+  }
+
+  .os-info {
+    justify-content: flex-end;
+  }
+}
