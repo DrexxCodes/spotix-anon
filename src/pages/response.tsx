@@ -196,13 +196,13 @@ export default function Response() {
         <main className="container p-8 flex-1">
           <div className="response-container">
             <div className="response-header">
-              <h1 className="response-title">
+              <h3 className="response-title">
                 <DecryptText
                   originalText={`Send ${linkData?.creatorUsername} an anonymous message`}
                   finalText={`Welcome to ${linkData?.creatorUsername}'s anonymous space`}
                   interval={4000}
                 />
-              </h1>
+              </h3>
             </div>
 
             <div className="response-content">
