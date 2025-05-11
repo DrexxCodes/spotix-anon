@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react"
 import { Users, Lock, Globe } from "lucide-react"
 import Header from "../components/header"
 import Footer from "../components/footer"
-import "./agc.css"
+import "./AGC.css"
 
 const AGC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null)
