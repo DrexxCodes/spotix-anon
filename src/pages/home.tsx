@@ -18,7 +18,7 @@ const welcomeTranslations = [
   { language: "Igbo", text: "Nnọọ" },
   { language: "Yoruba", text: "Káàbọ̀" },
   { language: "Hausa", text: "Barka da zuwa" },
-  { language: "Nigerian Pidgin", text: "You don land" },
+  { language: "Pidgin", text: "You don land" },
   { language: "French", text: "Bienvenue" },
   { language: "Spanish", text: "Bienvenido" },
   { language: "German", text: "Willkommen" },

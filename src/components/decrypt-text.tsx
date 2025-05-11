@@ -108,21 +108,9 @@ const DecryptText: React.FC<DecryptTextProps> = ({ originalText, finalText, inte
   const displayText = currentText.padEnd(Math.max(originalText.length, finalText.length), " ")
 
   return (
-    <span
-      className={`decrypt-text ${className} ${isDecrypting ? "decrypting" : ""}`}
-      style={{ display: "inline-block", whiteSpace: "normal" }}
-    >
+    <span className={`decrypt-text ${className} ${isDecrypting ? "decrypting" : ""}`}>
       {Array.from(displayText).map((char, index) => (
-        <span
-          key={index}
-          ref={(el) => setCharRef(el, index)}
-          className={`decrypt-char ${char === " " ? "decrypt-space" : ""}`}
-          style={{
-            display: "inline-block",
-            marginRight: "0.1em",
-            width: char === " " ? "0.5em" : "auto",
-          }}
-        >
+        <span key={index} ref={(el) => setCharRef(el, index)} className="decrypt-char">
           {char}
         </span>
       ))}

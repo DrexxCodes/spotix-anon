@@ -4,12 +4,14 @@ import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { VenetianMask, Menu, X } from "lucide-react"
 import { ThemeToggle } from "./theme-provider"
+import { useTheme } from "./theme-provider"
 import "./header.css"
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const location = useLocation()
+  const { theme } = useTheme()
 
   useEffect(() => {
     const handleResize = () => {
@@ -49,7 +51,7 @@ const Header = () => {
     { name: "Create Link", path: "/create-link" },
     { name: "Inbox", path: "/inbox" },
     { name: "Profile", path: "/profile" },
-    { name: "A.G.C", path: "/agc" },
+    { name: "A.G.C", path: "/agc", tag: "soon" },
   ]
 
   // Check if current path is a response page
@@ -76,6 +78,7 @@ const Header = () => {
                     }`}
                   >
                     {item.name}
+                    {item.tag && <span className="nav-tag">{item.tag}</span>}
                   </Link>
                 </li>
               ))}
@@ -84,7 +87,7 @@ const Header = () => {
         )}
 
         <div className="header-actions">
-          {/* Theme toggle only visible on desktop */}
+          {/* Theme toggle only (no label on desktop) */}
           {!isMobile && <ThemeToggle />}
 
           {/* Only show hamburger menu if not on response page */}
@@ -119,16 +122,18 @@ const Header = () => {
                       onClick={closeMenu}
                     >
                       {item.name}
+                      {item.tag && <span className="mobile-nav-tag">{item.tag}</span>}
                     </Link>
                   </li>
                 ))}
               </ul>
             </nav>
 
-            {/* Theme toggle at the bottom of mobile menu */}
+            {/* Theme toggle at the bottom of mobile menu with theme value */}
             <div className="mobile-theme-toggle">
               <div className="mobile-theme-toggle-container">
                 <span className="mobile-theme-toggle-label">Theme</span>
+                <span className="mobile-theme-value">{theme === "dark" ? "Dark" : "Light"}</span>
                 <ThemeToggle />
               </div>
             </div>

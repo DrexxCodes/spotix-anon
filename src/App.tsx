@@ -13,6 +13,7 @@ import Home from "./pages/home"
 import CreateLink from "./pages/create-link"
 import Response from "./pages/response"
 import Inbox from "./pages/inbox"
+import AGC from "./pages/AGC"
 import Message from "./pages/message"
 import Settings from "./pages/settings"
 import Profile from "./pages/profile"
@@ -76,6 +77,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CreateLink />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/agc"
+            element={
+              <ProtectedRoute>
+                <AGC />
               </ProtectedRoute>
             }
           />
