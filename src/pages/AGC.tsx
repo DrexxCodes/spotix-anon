@@ -1,4 +1,4 @@
-// I can't think 🤣"use client"
+"use client"
 
 import { useEffect, useRef } from "react"
 import { Users, Lock, Globe } from "lucide-react"

@@ -257,7 +257,7 @@ export default function Message() {
                   </div>
                   <div className="message-meta">
                     <h2 className="message-sender">Anonymous</h2>
-                    <p className="message-time">{formatDate(message.createdAt)}</p>
+                    {/* <p className="message-time">{formatDate(message.createdAt)}</p> */}
                   </div>
                 </div>
 
